@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <link rel="stylesheet" href="semantic.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="semantic.min.js"></script>
+</head>
+
+<style>
+    a {
+        margin: 120px;
+        font-size: 40px !important;
+    }
+
+    b {
+        color: red;
+    }
+
+    h3 {
+        margin-left: 30%;
+        margin-right: 30%;
+        width: 40%;
+    }
+</style>
+
+<body style="margin:20px">
+    <div  ng-app="myApp" ng-controller="myCtrl" class="text-center">
+
+        <table class="ui very basic collapsing celled table" style="">
+              <thead>
+                <tr>
+                    <th>Color</th>
+                    <th>0-5</th>
+                    <th>6-15</th>
+                </tr>
+              </thead>
+
+            <tr ng-repeat="color in colors">
+                <td>{{ color.name }}</td>
+                <td ng-repeat="oc in color.occurence">
+                    <div ng-show="oc < 20" style="width: 15px; height: 15px; background-color:red"></div>
+                </td>
+            </tr>
+
+
+        </table>
+
+
+
+
+
+    </div>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+
+            $scope.colors = [ {name: 'green', occurence: [10, 9]} ];
+
+
+
+
+        });
+    </script>
+
+</body>
+</html>
