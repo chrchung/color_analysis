@@ -19,12 +19,24 @@
         color: gray !important;
     }
 
+    p {
+        font-size: 20px;
+        text-align: left;
+    }
+
     h3 {
         color: gray !important;
     }
 
     .header {
         color: rgb(255, 115, 22);
+    }
+
+    .heading-container {
+        margin-bottom:40px;
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
     }
 
 
@@ -51,13 +63,13 @@
         <div class="ui grid">
           <div class="four wide column">
             <div class="ui vertical fluid tabular menu">
-              <a class="active item">
+              <a ng-click="sent=true;nove=false" class="active item">
                 Color Occurrences in Sentences of Various Lengths
               </a>
               <a class="item">
-                Color Occurrences in Sentences of Lengthed Clauses
+                Color Occurrences in Sentences of Various #'s of Clauses
               </a>
-              <a class="item">
+              <a ng-click="nove=true;sent=false" class="item">
                 Visualizing Novels
               </a>
               <a class="item">
@@ -65,21 +77,30 @@
               </a>
             </div>
           </div>
-          <div class="twelve wide stretched column">
+          <div ng-show="sent" class="twelve wide stretched column">
             <div class="ui segment">
-                <h3 style="margin-bottom: 20px">Color Occurrences in Sentences of Various Lengths</h2>
+                <h3 style="">Color Occurrences in Sentences of Various Lengths</h2>
+                <div class="heading-container">
+                    <p style=""><b>How to read:</b> The first column is the name color name.The second is the p-value
+                    computed by the KS test, representing how much the occurrences of each color in
+                    sentences of various lengths conforms to its expected value.
+                    Columns 3-11 are the actual/expected occurrence of each column for
+                    sentences of various lengths (0-5, 6-16, etc). 
+                    </p>
+                </div>
 
-                <table class="ui very basic collapsing celled table" style="">
+
+                <table class="ui very basic collapsing celled table" style="width:100%; margin:auto;">
                       <thead>
                         <tr>
                             <th>Color</th>
+                            <th>p-value</th>
                             <th>0-5</th>
                             <th>6-15</th>
                             <th>16-25</th>
                             <th>26-35</th>
                             <th>36-45</th>
-                            <th>46-55</th>
-                            <th>56-65</th>
+                            <th>46-65</th>
                             <th>66-85</th>
                             <th>85+</th>
                         </tr>
@@ -87,48 +108,64 @@
 
                     <tr ng-repeat="color in colors">
                         <td>{{ color.name }}</td>
-                        <td ng-repeat="oc in color.ratio">
-                            <div ng-show="oc == 1.0" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ oc }}
-                            </div>
-                            <div ng-show="oc >= 0.9 && oc < 1.0" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.9)">{{ oc }}
-                            </div>
-
-                            <div ng-show="oc >= 0.8 && oc < 0.9" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.8)">{{ oc }}
+                        <td>{{ color.p }}</td>
+                        <td ng-repeat="oc in color.ratio track by $index">
+                            <div ng-show="oc >= 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.7 && oc < 0.8" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.7)">{{ oc }}
+                            <div ng-show="oc >= 29.5 && oc < 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.9)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.5 && oc < 0.6" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.6)">{{ oc }}
+                            <div ng-show="oc >= 20 && oc < 29.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.8)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.4 && oc < 0.5" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.5)">{{ oc }}
+                            <div ng-show="oc >= 12.5 && oc < 20" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.7)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.3 && oc < 0.4" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.4)">{{ oc }}
+                            <div ng-show="oc >= 2.5 && oc < 12.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.6)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.2 && oc < 0.3" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.3)">{{ oc }}
+                            <div ng-show="oc >= 2.0 && oc < 2.5" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.5)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.1 && oc < 0.2" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.2)">{{ oc }}
+                            <div ng-show="oc >= 1.5 && oc < 2.0" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.4)">{{ Math.round(oc * 10) / 10 }}
                             </div>
 
-                            <div ng-show="oc >= 0.0 && oc < 0.1" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.1)">{{ oc }}
+                            <div ng-show="oc >= 1.0 && oc < 1.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.3)">{{ Math.round(oc * 10) / 10 }}
+                            </div>
+
+                            <div ng-show="oc >= 0.5 && oc < 1.0" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.2)">{{ Math.round(oc * 10) / 10 }}
+                            </div>
+
+                            <div ng-show="oc >= 0.0 && oc < 0.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.1)">{{ Math.round(oc * 10) / 10 }}
                             </div>
                         </td>
                     </tr>
                 </table>
             </div>
           </div>
+
+         <div ng-show="nove" class="twelve wide stretched column">
+            <h3 style="">Visualizing</h2>
+
+
+
+         </div>
+
         </div>
+
+
+
     </div>
 
     <script>
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope) {
+            $scope.sent = true;
 
             $scope.colors = sentenceLengths; 
+
+            $scope.Math = window.Math;
 
         });
     </script>
