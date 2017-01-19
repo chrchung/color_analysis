@@ -88,7 +88,7 @@
                 </div>
 
 
-                <table class="ui very basic collapsing celled table" style="width:100%; margin:auto;">
+                <table class="ui very basic collapsing celled table" style="width:80%; margin:auto;">
                       <thead>
                         <tr>
                             <th>Color</th>
@@ -105,7 +105,6 @@
 
                     <tr ng-repeat="color in colors">
                         <td>{{ color.name }}</td>
-                        <td>{{ color.p }}</td>
                         <td ng-repeat="oc in color.ratio track by $index">
                             <div ng-show="oc >= 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ Math.round(oc * 10) / 10 }}
                             </div>
