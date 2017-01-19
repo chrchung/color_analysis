@@ -9,6 +9,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="semantic.min.js"></script>
+    <script type="text/javascript" src="data/sentences.js"></script>
+
 </head>
 
 <style>
@@ -17,7 +19,7 @@
         color: gray !important;
     }
 
-    h2 {
+    h3 {
         color: gray !important;
     }
 
@@ -65,7 +67,7 @@
           </div>
           <div class="twelve wide stretched column">
             <div class="ui segment">
-                <h2>Color Occurrences in Sentences of Various Lengths</h2>
+                <h3 style="margin-bottom: 20px">Color Occurrences in Sentences of Various Lengths</h2>
 
                 <table class="ui very basic collapsing celled table" style="">
                       <thead>
@@ -73,13 +75,47 @@
                             <th>Color</th>
                             <th>0-5</th>
                             <th>6-15</th>
+                            <th>16-25</th>
+                            <th>26-35</th>
+                            <th>36-45</th>
+                            <th>46-55</th>
+                            <th>56-65</th>
+                            <th>66-85</th>
+                            <th>85+</th>
                         </tr>
                       </thead>
 
                     <tr ng-repeat="color in colors">
                         <td>{{ color.name }}</td>
-                        <td ng-repeat="oc in color.occurence">
-                            <div ng-show="oc < 20" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:red">{{ oc }}</div>
+                        <td ng-repeat="oc in color.ratio">
+                            <div ng-show="oc == 1.0" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ oc }}
+                            </div>
+                            <div ng-show="oc >= 0.9 && oc < 1.0" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.9)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.8 && oc < 0.9" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.8)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.7 && oc < 0.8" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.7)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.5 && oc < 0.6" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.6)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.4 && oc < 0.5" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.5)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.3 && oc < 0.4" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.4)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.2 && oc < 0.3" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.3)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.1 && oc < 0.2" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.2)">{{ oc }}
+                            </div>
+
+                            <div ng-show="oc >= 0.0 && oc < 0.1" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.1)">{{ oc }}
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -92,15 +128,7 @@
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope) {
 
-            jQuery.getJSON('data/sentence_length.json', function (data) {
-                $scope.colors = data;
-            });
-
-            
-
-
-
-
+            $scope.colors = sentenceLengths; 
 
         });
     </script>
