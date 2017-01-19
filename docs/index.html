@@ -12,55 +12,92 @@
 </head>
 
 <style>
-    a {
+    .item {
+        font-size: 14px;
+        color: gray !important;
+    }
+
+    h2 {
+        color: gray !important;
+    }
+
+    .header {
+        color: rgb(255, 115, 22);
+    }
+
+
+/*    a {
         margin: 120px;
         font-size: 40px !important;
-    }
+    }*/
 
-    b {
+/*    b {
         color: red;
-    }
+    }*/
 
-    h3 {
+/*    h3 {
         margin-left: 30%;
         margin-right: 30%;
         width: 40%;
-    }
+    }*/
 </style>
 
 <body style="margin:20px">
+    <h1 style="margin-bottom: 50px; text-align: center" class="header">Visualizing Color Usage in 19th Century English Novels</h1>
+
     <div  ng-app="myApp" ng-controller="myCtrl" class="text-center">
+        <div class="ui grid">
+          <div class="four wide column">
+            <div class="ui vertical fluid tabular menu">
+              <a class="active item">
+                Color Occurrences in Sentences of Various Lengths
+              </a>
+              <a class="item">
+                Color Occurrences in Sentences of Lengthed Clauses
+              </a>
+              <a class="item">
+                Visualizing Novels
+              </a>
+              <a class="item">
+                
+              </a>
+            </div>
+          </div>
+          <div class="twelve wide stretched column">
+            <div class="ui segment">
+                <h2>Color Occurrences in Sentences of Various Lengths</h2>
 
-        <table class="ui very basic collapsing celled table" style="">
-              <thead>
-                <tr>
-                    <th>Color</th>
-                    <th>0-5</th>
-                    <th>6-15</th>
-                </tr>
-              </thead>
+                <table class="ui very basic collapsing celled table" style="">
+                      <thead>
+                        <tr>
+                            <th>Color</th>
+                            <th>0-5</th>
+                            <th>6-15</th>
+                        </tr>
+                      </thead>
 
-            <tr ng-repeat="color in colors">
-                <td>{{ color.name }}</td>
-                <td ng-repeat="oc in color.occurence">
-                    <div ng-show="oc < 20" style="width: 15px; height: 15px; background-color:red"></div>
-                </td>
-            </tr>
-
-
-        </table>
-
-
-
-
-
+                    <tr ng-repeat="color in colors">
+                        <td>{{ color.name }}</td>
+                        <td ng-repeat="oc in color.occurence">
+                            <div ng-show="oc < 20" style="width: 20px; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:red">{{ oc }}</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+          </div>
+        </div>
     </div>
 
     <script>
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope) {
 
-            $scope.colors = [ {name: 'green', occurence: [10, 9]} ];
+            jQuery.getJSON('data/sentence_length.json', function (data) {
+                $scope.colors = data;
+            });
+
+            
+
 
 
 
