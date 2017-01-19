@@ -19,7 +19,7 @@
         color: gray !important;
     }
 
-    p {
+    .heading-container p {
         font-size: 20px;
         text-align: left;
     }
@@ -63,13 +63,13 @@
         <div class="ui grid">
           <div class="four wide column">
             <div class="ui vertical fluid tabular menu">
-              <a ng-click="sent=true;nove=false" class="active item">
+              <a ng-click="showView('sent')" class="a_sent item">
                 Color Occurrences in Sentences of Various Lengths
               </a>
-              <a class="item">
+              <a class="a_clause item">
                 Color Occurrences in Sentences of Various #'s of Clauses
               </a>
-              <a ng-click="nove=true;sent=false" class="item">
+              <a ng-click="showView('nove')" class="a_nove item">
                 Visualizing Novels
               </a>
               <a class="item">
@@ -77,91 +77,132 @@
               </a>
             </div>
           </div>
-          <div ng-show="sent" class="twelve wide stretched column">
+          <div class="twelve wide stretched column">
             <div class="ui segment">
-                <h3 style="">Color Occurrences in Sentences of Various Lengths</h2>
-                <div class="heading-container">
-                    <p style=""><b>How to read:</b> The first column is the name color name.
-                    Columns 2-10 are the actual/expected ratio for
-                    sentences of various lengths (0-5, 6-16, etc). 
-                    </p>
+<!--                 <div class="wel">Welcome</div>
+ -->                <div class="sent">
+                    <h3 style="">Color Occurrences in Sentences of Various Lengths</h2>
+                    <div class="heading-container">
+                        <p style=""><b>How to read:</b> The first column is the name color name.
+                        Columns 2-10 are the actual/expected ratio for
+                        sentences of various lengths (0-5, 6-16, etc). 
+                        </p>
+                    </div>
+                    <table class="ui very basic collapsing celled table" style="width:80%; margin:auto;">
+                          <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>0-5</th>
+                                <th>6-15</th>
+                                <th>16-25</th>
+                                <th>26-35</th>
+                                <th>36-45</th>
+                                <th>46-65</th>
+                                <th>66-85</th>
+                                <th>85+</th>
+                            </tr>
+                          </thead>
+
+                        <tr ng-repeat="color in colors">
+                            <td>{{ color.name }}</td>
+                            <td ng-repeat="oc in color.ratio track by $index">
+                                <div ng-show="oc >= 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 29.5 && oc < 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.9)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 20 && oc < 29.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.8)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 12.5 && oc < 20" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.7)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 2.5 && oc < 12.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.6)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 2.0 && oc < 2.5" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.5)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 1.5 && oc < 2.0" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.4)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 1.0 && oc < 1.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.3)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.5 && oc < 1.0" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.2)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.0 && oc < 0.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.1)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div> 
+
+                <div class="nove">
+                    <h3 class="header" style="">Visualizing Novels</h2>
+                    <div class="heading-container">
+                         <p style=""><b>How to read:</b> Below are visualizations of
+                         color mentions in 10 novels. The visualization on the left
+                         plots color based on the index they occur.
+                         The visualization on the right plots colors based on how frequenctly
+                         they are used in the book (i.e. frequent colors take up a larger amount of space). 
+                         </p>
+                    </div>
+
+                    <div style="text-align:center;margin-bottom:10px" ng-repeat="novel in novels">
+                        <img style="display:inline-block;width:40%;margin:auto;" ng-src="{{novel.index}}"/>
+                        <img style="display:inline-block;width:40%;margin:auto;" ng-src="{{novel.mention}}"/>
+
+                        <p><b>{{novel.author}}</b><br>{{novel.title}}</p>
+                    </div>
+
                 </div>
 
-
-                <table class="ui very basic collapsing celled table" style="width:80%; margin:auto;">
-                      <thead>
-                        <tr>
-                            <th>Color</th>
-                            <th>0-5</th>
-                            <th>6-15</th>
-                            <th>16-25</th>
-                            <th>26-35</th>
-                            <th>36-45</th>
-                            <th>46-65</th>
-                            <th>66-85</th>
-                            <th>85+</th>
-                        </tr>
-                      </thead>
-
-                    <tr ng-repeat="color in colors">
-                        <td>{{ color.name }}</td>
-                        <td ng-repeat="oc in color.ratio track by $index">
-                            <div ng-show="oc >= 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 29.5 && oc < 40" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.9)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 20 && oc < 29.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.8)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 12.5 && oc < 20" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.7)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 2.5 && oc < 12.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.6)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 2.0 && oc < 2.5" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.5)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 1.5 && oc < 2.0" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.4)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 1.0 && oc < 1.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.3)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 0.5 && oc < 1.0" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.2)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-
-                            <div ng-show="oc >= 0.0 && oc < 0.5" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.1)">{{ Math.round(oc * 10) / 10 }}
-                            </div>
-                        </td>
-                    </tr>
-                </table>
             </div>
           </div>
-
-         <div ng-show="nove" class="twelve wide stretched column">
-            <h3 style="">Visualizing</h2>
-
-
-
-         </div>
-
         </div>
-
-
-
     </div>
 
     <script>
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope) {
-            $scope.sent = true;
+            $scope.views = ['sent', 'nove'];
 
-            $scope.colors = sentenceLengths; 
+            $scope.colors = sentenceLengths;
+
+            $scope.novels = [
+
+            {title: 'Can You Forgive Her?', author: 'Anthony Trollope', index: 'data/novels/plot_by_index/can_you_forgive_her.png', mention: 'data/novels/plot_by_mention/can_you_forgive_her.png'}, 
+            {title: 'David Copperfield', author: 'Charles Dickens', index: 'data/novels/plot_by_index/david_copperfield.png', mention: 'data/novels/plot_by_mention/david_copperfield.png'},
+            {title: 'In Sight of Land', author: 'Duffus Hardy', index: 'data/novels/plot_by_index/in_sight_of_land.png', mention: 'data/novels/plot_by_mention/in_sight_of_land.png'}, 
+            {title: 'Jude The Obscure', author: 'Thomas Hardy', index: 'data/novels/plot_by_index/jude_the_obscure.png', mention: 'data/novels/plot_by_mention/jude_the_obscure.png'}, 
+            {title: 'Middlemarch, A Study of Provincial Life ', author: 'George Elliot', index: 'data/novels/plot_by_index/middlemarch.png', mention: 'data/novels/plot_by_mention/middlemarch.png'}, 
+            {title: 'North and South', author: 'Elizabeth Gaskell', index: 'data/novels/plot_by_index/north_and_south.png', mention: 'data/novels/plot_by_mention/north_and_south.png'}, 
+            {title: 'Our Mutual Friend', author: 'Charles Dickens', index: 'data/novels/plot_by_index/our_mutual_friend.png', mention: 'data/novels/plot_by_mention/our_mutual_friend.png'}, 
+            {title: 'The Major of Casterbridge', author: 'Thomas Hardy', index: 'data/novels/plot_by_index/the_mayor_of_casterbridge.png', mention: 'data/novels/plot_by_mention/the_mayor_of_casterbridge.png'}, 
+            {title: 'The Picture of Dorian Gray', author: 'Oscar Wilde', index: 'data/novels/plot_by_index/the_picture_of_dorian_gray.png', mention: 'data/novels/plot_by_mention/the_picture_of_dorian_gray.png'}, 
+            {title: 'Under The Greenwood Tree: A Rural Painting of the Dutch School', author: 'Thomas Hardy', index: 'data/novels/plot_by_index/under_the_greenwood_tree.png', mention: 'data/novels/plot_by_mention/under_the_greenwood_tree.png'}, 
+
+            ]; 
 
             $scope.Math = window.Math;
+
+            $scope.showView = function(view) {
+                for (var i = 0; i < $scope.views.length; i ++) {
+                    $('.' + $scope.views[i]).hide();
+                    $('.a_' + $scope.views[i]).removeClass("active");
+                }
+
+                $('.' + view).fadeIn();
+                $('.a_' + view).addClass("active");
+            };
+
+            $scope.showView('sent');
+
+
+
 
         });
     </script>
