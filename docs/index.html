@@ -10,10 +10,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="semantic.min.js"></script>
     <script type="text/javascript" src="data/sentences.js"></script>
+    <script type="text/javascript" src="data/clause.js"></script>
 
 </head>
 
 <style>
+    .cont {
+        display: none;
+    }
+
     .item {
         font-size: 14px;
         color: gray !important;
@@ -64,10 +69,10 @@
           <div class="four wide column">
             <div class="ui vertical fluid tabular menu">
               <a ng-click="showView('sent')" class="a_sent item">
-                Color Occurrences in Sentences of Various Lengths
+                Color Occurrences in Sentences Based on Word Count
               </a>
-              <a class="a_clause item">
-                Color Occurrences in Sentences of Various #'s of Clauses
+              <a ng-click="showView('clause')" class="a_clause item">
+                Color Occurrences in Sentences Based on Number of Clauses
               </a>
               <a ng-click="showView('nove')" class="a_nove item">
                 Visualizing Novels
@@ -79,9 +84,8 @@
           </div>
           <div class="twelve wide stretched column">
             <div class="ui segment">
-<!--                 <div class="wel">Welcome</div>
- -->                <div class="sent">
-                    <h3 style="">Color Occurrences in Sentences of Various Lengths</h2>
+                <div class="cont sent">
+                    <h3 style="">Color Occurrences in Sentences Based on Word Count</h2>
                     <div class="heading-container">
                         <p style=""><b>How to read:</b> The first column is the name color name.
                         Columns 2-10 are the actual/expected ratio for
@@ -138,9 +142,66 @@
                             </td>
                         </tr>
                     </table>
-                </div> 
+                </div>
 
-                <div class="nove">
+
+                <div class="cont clause">
+                    <h3 style="">Color Occurrences in Sentences Based On Number of Clauses</h2>
+                    <div class="heading-container">
+                        <p style=""><b>How to read:</b> The first column is the name color name.
+                        Columns 2-5 are the actual/expected ratio for
+                        sentences with a particular amount of clauses (1, 2, 3, or 4+). 
+                        </p>
+                    </div>
+                    <table class="ui very basic collapsing celled table" style="width:80%; margin:auto;">
+                          <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>1</th>
+                                <th>2</th>
+                                <th>3</th>
+                                <th>4+</th>
+                            </tr>
+                          </thead>
+
+                        <tr ng-repeat="color in colors2">
+                            <td>{{ color.name }}</td>
+                            <td ng-repeat="oc in color.ratio track by $index">
+                                <div ng-show="oc >= 5" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 1.0)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 4 && oc < 5" style="width: 20px; margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.9)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 3 && oc < 4" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.8)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 2 && oc < 3" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.7)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 1 && oc < 2" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.6)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.8 && oc < 1" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.5)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.6 && oc < 0.8" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.4)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.4 && oc < 0.6" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.3)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.2 && oc < 0.4" style="width: 20px; margin: auto;height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.2)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+
+                                <div ng-show="oc >= 0.0 && oc < 0.2" style="width: 20px;margin: auto; height: 20px; color: white; line-height:20px; font-size: 10px; text-align: center; background-color:rgba(255, 0, 0, 0.1)">{{ Math.round(oc * 10) / 10 }}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="cont nove">
                     <h3 class="header" style="">Visualizing Novels</h2>
                     <div class="heading-container">
                          <p style=""><b>How to read:</b> Below are visualizations of
@@ -168,9 +229,10 @@
     <script>
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function($scope) {
-            $scope.views = ['sent', 'nove'];
+            $scope.views = ['sent', 'nove', 'clause'];
 
             $scope.colors = sentenceLengths;
+            $scope.colors2 = sentenceClause;
 
             $scope.novels = [
 
