@@ -28,7 +28,7 @@ def total_occurence_per_color():
         
 def parse_color_list():
     res = []
-    with open('../query_results/colors_appearing_at_most210.txt', 'r') as f:
+    with open('../query_results/thresholded.txt', 'r') as f:
         for row in f:
             row = row.strip('\n')
             res.append(row) 
