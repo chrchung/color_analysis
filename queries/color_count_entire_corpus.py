@@ -20,7 +20,7 @@ def color_count(color_list):
     SELECT color.name, color.base, count(*)
     FROM color, mention
     WHERE color.id == mention.color
-    GROUP BY color.name, color.base
+    GROUP BY color.name
     """
 
 ##    query = """
@@ -71,7 +71,7 @@ for color in color_counts:
         color_names_dist[10].append(color)
 
 for count in color_names_dist:
-    f = open('colors_appearing_at_most' + str(count) + '.txt' ,'w');
+    f = open('colors_appearing_at_most2' + str(count) + '.txt' ,'w');
 
     for color in color_names_dist[count]:
         f.write(color + '\n')

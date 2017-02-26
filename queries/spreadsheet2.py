@@ -52,15 +52,16 @@ def number_of_sentences_in_corpus():
 
     return c.fetchone()[0]
 
-def occurence_color_in_length(length_dist):
+def occurence_color_in_num_clauses(clause_dist):
     res = {}
 
-    for length in length_dist:        
+    for length in clause_dist:        
         query = """SELECT color.name, count(*) FROM color, mention, sentence, clause
         WHERE mention.color=color.id AND mention.clause=clause.id
         AND clause.sentence=sentence.id AND
-        sentence.length >= """ + str(length[0]) + """ AND sentence.length <= """ + str(length[1]) + """ GROUP BY color.name"""
-
+        sentence.num_dep + sentence.num_indep >= """ + str(length[0]) + """ AND sentence.num_dep + sentence.num_indep <= """ + str(length[1]) + """ GROUP BY color.name"""
+        
+        print(query)
         c.execute(query)
 
         res[length] = {}
@@ -71,11 +72,11 @@ def occurence_color_in_length(length_dist):
             
     return res
 
-def percent_occurence_sentences_of_length(length_dist, num_sentences):
+def percent_occurence_sentences_of_num_clauses(clause_dist, num_sentences):
     res = {}
     
-    for length in length_dist:
-        query = """SELECT count(*) FROM sentence WHERE sentence.length >= """ + str(length[0]) + """ AND sentence.length <= """ + str(length[1])
+    for length in clause_dist:
+        query = """SELECT count(*) FROM sentence WHERE sentence.num_dep + sentence.num_indep >= """ + str(length[0]) + """ AND sentence.num_dep + sentence.num_indep <= """ + str(length[1])
 
         c.execute(query)
 
@@ -86,25 +87,24 @@ def percent_occurence_sentences_of_length(length_dist, num_sentences):
 
 co = parse_color_list()
 ##string_list = stringify_color_list(color_list)
-to = json.loads(open('../query_results/total_occurence_per_color.json', 'r').read())
+to = total_occurence_per_color()
 
 # considering sentence lengths of 0-5, 6-15, etc. 
-length_dist = [(0, 5), (6, 15), (16, 25), (26, 35), (36, 45), (46, 65), (66, 85), (86, 10000)]
+clause_dist = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 10), (11, 15), (16, 21), (22, 10000)]
 
 # number of sentences in corpus
-num_sentences = json.loads(open('../query_results/num_sentences.json', 'r').read())
+num_sentences = number_of_sentences_in_corpus()
 
 # get total occurrence of sentences for various lengths
-pos =  json.loads(open('../query_results/pos.json', 'r').read())
+pos = percent_occurence_sentences_of_num_clauses(clause_dist, num_sentences)
 
-oc = json.loads(open('../query_results/oc.json', 'r').read())
+oc = occurence_color_in_num_clauses(clause_dist)
 
 res = []
 for color in co:
     stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': []}
     
-    for length in length_dist:
-        length = str(length[0]) + '_' + str(length[1])
+    for length in clause_dist:
         expected = to[color] * pos[length]
 
         actual = oc[length][color] if color in oc[length].keys() else 0
@@ -113,25 +113,24 @@ for color in co:
         stat['expected'].append(expected)
         stat['actual'].append(actual)
         stat['ratio'].append(ratio)
-
         stat['p'].append(abs(actual - expected) / expected)
 
 
     res.append(stat)
 
-
-f = open('../query_results/spreadsheet_sent.txt', 'w')
+f = open('../query_results/spreadsheet_clause.txt', 'w')
 f.write(json.dumps(res))
-f.close()
+f.close();
 
 res2 = []
 for color in res:
     stat = {'name': color['name'], 'p': color['p']}
     res2.append(stat)
 
-f = open('../query_results/sentences.json', 'w')
+f = open('../query_results/clause.json', 'w')
 f.write(json.dumps(res2))
-f.close()
+f.close();
+    
     
 
 
