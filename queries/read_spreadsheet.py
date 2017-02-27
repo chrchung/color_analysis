@@ -11,8 +11,8 @@ def parse_color_list(f):
     return res
 
 f = open('../query_results/spreadsheet_clause.txt', 'r').read()
-res = json.loads(f)
-f2 = open('../query_results/spreadsheet_clause2.csv', 'w')
+##res = json.loads(f)
+##f2 = open('../query_results/spreadsheet_clause2.csv', 'w')
 
 m = 0
 c = 1000
