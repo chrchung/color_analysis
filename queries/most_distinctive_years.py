@@ -28,9 +28,9 @@ for color in co:
     
     for decade in decades:
         length = decade
-        expected = to[color] * wc[length] / to_wc
+        expected = to[color] * wc[length] / to_wc / wc[decade] 
 
-        actual = mentions[length][color] if color in mentions[length].keys() else 0
+        actual = mentions[length][color] / wc[decade] if color in mentions[length].keys() else 0
         ratio = actual / expected if expected else 0
         
         stat['expected'].append(expected)

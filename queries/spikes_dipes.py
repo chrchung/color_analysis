@@ -16,13 +16,13 @@ def parse_color_list():
     f.close()
     return res
 
-def get_dramatic(lobf):
+def get_dramatic(delta):
     res = []
-    slopes = [lobf[color]['slope'] for color in lobf]
-    p = percentile(slopes, 90)
+    slopes = [delta[color] for color in delta]
+    p = percentile(slopes, 95)
 
-    for color in lobf:
-        if lobf[color]['slope'] >= p:
+    for color in delta:
+        if delta[color] >= p:
             res.append(color)
 
     return res
@@ -60,30 +60,28 @@ inc = {}
 dec = {}
 
 for color in co:
-    a = []
-    for decade in decades:
-        if color in mentions[decade].keys():
-            a.append(mentions[decade][color] / wc[decade])
-        else:
-            a.append(0)
-            
-    slope, intercept, r_value, p_value, std_err = stats.linregress(d, a)
-    line = slope*d+intercept
+    inc[color] = -2000
+    dec[color] = 2000
 
-    if (slope >= 0):
-        inc[color] = {'slope': slope, 'intercept': intercept}
- 
-    if (slope <= 0):
-        dec[color] = {'slope': abs(slope), 'intercept': intercept}
+    for decade in range(0, len(decades) - 1):
+        val = mentions[decades[decade]][color] / wc[decades[decade]]
+        val2 = mentions[decades[decade + 1]][color] / wc[decades[decade]]
+
+        res = val2 - val
+
+        if res > 0:
+            inc[color] = res if inc[color] < res else inc[color]
+        elif res < 0:
+            dec[color] = res if dec[color] > res else dec[color]            
 
 print(len(inc))
 print(len(dec))
 
-inc = get_dramatic(inc)
-dec = get_dramatic(dec)
+incs = get_dramatic(inc)
+decs = get_dramatic(dec)
 
-plot_dramatic(mentions, inc, decades, wc, 'Most Dramatic Colors (Increasing)')
-plot_dramatic(mentions, dec, decades, wc, 'Most Dramatic Colors (Decreasing)')
+plot_dramatic(mentions, incs, decades, wc, 'Colors with Dramatic Spikes')
+plot_dramatic(mentions, decs, decades, wc, 'Color with Dramatic Dips')
 
 
 f = open('../query_results/dramatic_inc.txt', 'w')
