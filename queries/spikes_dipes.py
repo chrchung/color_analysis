@@ -51,48 +51,38 @@ def plot_dramatic(mentions, co, decades, wc, tit):
     py.iplot(fig, filename=tit)
 
 decades = ['1800_1810', '1810_1820', '1820_1830', '1830_1840', '1840_1850', '1850_1860', '1860_1870', '1870_1880', '1880_1890', '1890_1900']
-d = array([1800, 1810, 1820, 1830, 1840, 1850, 1860, 1870, 1880, 1890])
 mentions = json.loads(open('../query_results/indiv_color_mention_per_decade.txt', 'r').read())
 co = parse_color_list()
 wc = json.loads(open('../query_results/word_count_per_decade.txt', 'r').read())
 
-inc = {}
-dec = {}
+res_inc = {}
+res_dec = {}
 
-for color in co:
-    inc[color] = -2000
-    dec[color] = 2000
+for decade in range(0, len(decades) - 1):
+    res_inc[decades[decade]] = {}
+    res_dec[decades[decade]] = {}
 
-    for decade in range(0, len(decades) - 1):
+    for color in co:
         val = mentions[decades[decade]][color] / wc[decades[decade]]
         val2 = mentions[decades[decade + 1]][color] / wc[decades[decade]]
 
         res = val2 - val
 
         if res > 0:
-            inc[color] = res if inc[color] < res else inc[color]
+            res_inc[decades[decade]][color] = res 
         elif res < 0:
-            dec[color] = res if dec[color] > res else dec[color]            
-
-print(len(inc))
-print(len(dec))
-
-incs = get_dramatic(inc)
-decs = get_dramatic(dec)
-
-plot_dramatic(mentions, incs, decades, wc, 'Colors with Dramatic Spikes')
-plot_dramatic(mentions, decs, decades, wc, 'Color with Dramatic Dips')
-
-
-f = open('../query_results/dramatic_inc.txt', 'w')
-f.write(json.dumps(inc))
-f.close()
-
-f = open('../query_results/dramatic_dec.txt', 'w')
-f.write(json.dumps(dec))
-f.close()
+            res_dec[decades[decade]][color] = abs(res)
+        else:
+            res_inc[decades[decade]][color] = res 
+            res_inc[decades[decade]][color] = res 
 
 
 
+for decade in range(0, len(decades) - 1):
+    incs = get_dramatic(res_inc[decades[decade]])
+    decs = get_dramatic(res_dec[decades[decade]])
+
+    plot_dramatic(mentions, incs, decades, wc, 'Colors with Dramatic Spikes between ' + decades[decade] + ' and ' + decades[decade + 1])
+    plot_dramatic(mentions, decs, decades, wc, 'Color with Dramatic Dips between ' + decades[decade] + ' and ' + decades[decade + 1])
 
 
