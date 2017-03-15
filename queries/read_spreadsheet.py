@@ -11,7 +11,7 @@ def parse_color_list(f):
     f.close()
     return res
 
-f = open('../query_results/distinctive_periods.json', 'r').read()
+f = open('../query_results/distinctive_heights.json', 'r').read()
 res = json.loads(f)
 ##f2 = open('../query_results/spreadsheet_clause2.csv', 'w')
 

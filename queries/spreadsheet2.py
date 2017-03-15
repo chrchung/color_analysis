@@ -59,7 +59,7 @@ def occurence_color_in_num_clauses(clause_dist):
         query = """SELECT color.name, count(*) FROM color, mention, sentence, clause
         WHERE mention.color=color.id AND mention.clause=clause.id
         AND clause.sentence=sentence.id AND
-        sentence.num_dep + sentence.num_indep >= """ + str(length[0]) + """ AND sentence.num_dep + sentence.num_indep <= """ + str(length[1]) + """ GROUP BY color.name"""
+        sentence.num_dep >= """ + str(length[0]) + """ AND sentence.num_dep <= """ + str(length[1]) + """ GROUP BY color.name"""
         
         print(query)
         c.execute(query)
@@ -76,7 +76,7 @@ def percent_occurence_sentences_of_num_clauses(clause_dist, num_sentences):
     res = {}
     
     for length in clause_dist:
-        query = """SELECT count(*) FROM sentence WHERE sentence.num_dep + sentence.num_indep >= """ + str(length[0]) + """ AND sentence.num_dep + sentence.num_indep <= """ + str(length[1])
+        query = """SELECT count(*) FROM sentence WHERE sentence.num_dep >= """ + str(length[0]) + """ AND sentence.num_dep <= """ + str(length[1])
 
         c.execute(query)
 
@@ -90,7 +90,7 @@ co = parse_color_list()
 to = total_occurence_per_color()
 
 # considering sentence lengths of 0-5, 6-15, etc. 
-clause_dist = [(1, 1), (2, 2), (3, 3), (4, 4), (5, 10), (11, 15), (16, 21), (22, 10000)]
+clause_dist = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 9), (10, 20), (21, 30), (31, 40), (41, 100)]
 
 # number of sentences in corpus
 num_sentences = number_of_sentences_in_corpus()
@@ -102,7 +102,7 @@ oc = occurence_color_in_num_clauses(clause_dist)
 
 res = []
 for color in co:
-    stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': []}
+    stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': [], 'percent':[]}
     
     for length in clause_dist:
         expected = to[color] * pos[length]
@@ -113,6 +113,7 @@ for color in co:
         stat['expected'].append(expected)
         stat['actual'].append(actual)
         stat['ratio'].append(ratio)
+        stat['percent'].append(actual / to[color])
         stat['p'].append(abs(actual - expected) / expected)
 
 
@@ -124,11 +125,11 @@ f.close();
 
 res2 = []
 for color in res:
-    stat = {'name': color['name'], 'p': color['p']}
+    stat = {'name': color['name'], 'actual': color['actual']}
     res2.append(stat)
 
-f = open('../query_results/clause.json', 'w')
-f.write(json.dumps(res2))
+f = open('../query_results/clause_dep.json', 'w')
+f.write(json.dumps(res))
 f.close();
     
     

@@ -9,15 +9,15 @@ def sentence_per_period(period):
     start = period[0]
     finish = period[1]
     
-    query = 'SELECT count(*) FROM sentence WHERE (sentence.periodicity >= ' +\
-            start + ' AND sentence.periodicity < ' + finish + ')'
+    query = 'SELECT count(*) FROM sentence WHERE (sentence.height >= ' +\
+            start + ' AND sentence.height < ' + finish + ') AND sentence.height >= 0' 
     
     c.execute(query)
 
     return c.fetchone()[0]
 
 # go through each decade and get the total text count
-periods = ['-1_1','1_2', '2_3', '3_4', '4_7', '7_14', '14_23', '23_46', '46_1000']
+periods = ['0_6','6_8', '8_10', '10_13', '13_16', '16_19', '19_21', '21_28', '28_40', '40_60', '60_80', '80_100', '100_1000']
 
 res = {}
 
@@ -25,7 +25,7 @@ for period in periods:
     res[period] = sentence_per_period(period)
     
 # save results as json
-f = open('../query_results/period_distribution.txt', 'w')
+f = open('../query_results/height_distribution.txt', 'w')
 f.write(json.dumps(res))
 f.close()
 

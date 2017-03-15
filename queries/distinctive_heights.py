@@ -15,18 +15,18 @@ def parse_color_list():
     return res
 
 
-mentions = json.loads(open('../query_results/color_mentions_per_period.txt', 'r').read())
-wc = json.loads(open('../query_results/period_distribution.txt', 'r').read())
+mentions = json.loads(open('../query_results/color_mentions_per_height.txt', 'r').read())
+wc = json.loads(open('../query_results/height_distribution.txt', 'r').read())
 co = parse_color_list()
 to = json.loads(open('../query_results/total_occurence_per_color.json', 'r').read())
-decades = ['0_2','2_4', '4_8', '8_15', '15_24', '24_47', '47_60', '60_80', '80_100', '100_150', '150_200', '200_1000']
+decades = ['0_6','6_8', '8_10', '10_13', '13_16', '16_19', '19_21', '21_28', '28_40', '40_60', '60_80', '80_100', '100_1000']
 
 
 to_wc = sum([int(wc[decade]) for decade in wc])
 
 res = []
 for color in co:
-    stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': [], 'percent':[]}
+    stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': [], 'percent': []}
     
     for decade in decades:
         length = decade
@@ -49,11 +49,13 @@ for color in co:
 
 
     
-res2 = []
-for color in res:
-    stat = {'name': color['name'], 'actual': color['actual']}
-    res2.append(stat)
+##res2 = []
+##for color in res:
+##    stat = {'name': color['name'], 'p': color['p'] 'actual': color['actual']}
+##    res2.append(stat)
 
-f = open('../query_results/distinctive_periods.json', 'w')
+f = open('../query_results/distinctive_heights.json', 'w')
 f.write(json.dumps(res))
 f.close()
+
+

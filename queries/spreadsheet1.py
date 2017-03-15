@@ -63,11 +63,11 @@ def occurence_color_in_length(length_dist):
 
         c.execute(query)
 
-        res[length] = {}
+        res[str(length[0]) + '_' + str(length[1])] = {}
         for row in c.fetchall():
             color = row[0]
             count = row[1]
-            res[length][color] = count
+            res[str(length[0]) + '_' + str(length[1])][color] = count
             
     return res
 
@@ -79,7 +79,7 @@ def percent_occurence_sentences_of_length(length_dist, num_sentences):
 
         c.execute(query)
 
-        res[length] = c.fetchone()[0] / num_sentences
+        res[str(length[0]) + '_' + str(length[1])] = c.fetchone()[0] / num_sentences
 
     return res
        
@@ -89,19 +89,19 @@ co = parse_color_list()
 to = json.loads(open('../query_results/total_occurence_per_color.json', 'r').read())
 
 # considering sentence lengths of 0-5, 6-15, etc. 
-length_dist = [(0, 5), (6, 15), (16, 25), (26, 35), (36, 45), (46, 65), (66, 85), (86, 10000)]
+length_dist = [(0, 3), (4, 6), (7, 9), (10, 12), (13, 16), (16, 20), (21, 25), (26, 33), (34, 44), (45, 57), (58, 87), (88, 150), (151, 199), (200, 1000)]
 
 # number of sentences in corpus
 num_sentences = json.loads(open('../query_results/num_sentences.json', 'r').read())
 
 # get total occurrence of sentences for various lengths
-pos =  json.loads(open('../query_results/pos.json', 'r').read())
+pos = percent_occurence_sentences_of_length(length_dist, num_sentences)
 
-oc = json.loads(open('../query_results/oc.json', 'r').read())
+oc = occurence_color_in_length(length_dist)
 
 res = []
 for color in co:
-    stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': []}
+    stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': [], 'percent':[]}
     
     for length in length_dist:
         length = str(length[0]) + '_' + str(length[1])
@@ -113,6 +113,7 @@ for color in co:
         stat['expected'].append(expected)
         stat['actual'].append(actual)
         stat['ratio'].append(ratio)
+        stat['percent'].append(actual / to[color])
 
         stat['p'].append(abs(actual - expected) / expected)
 
@@ -130,7 +131,7 @@ for color in res:
     res2.append(stat)
 
 f = open('../query_results/sentences.json', 'w')
-f.write(json.dumps(res2))
+f.write(json.dumps(res))
 f.close()
     
 

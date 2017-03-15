@@ -1,10 +1,31 @@
 import sqlite3
+from scipy import stats
+import json
+from numpy import percentile
 conn = sqlite3.connect('../color_analysis_merged.db')
 c = conn.cursor()
 
-query = """SELECT color.name, color.id, color.base, count(*) FROM color, mention, sentence, clause, book WHERE mention.color=color.id AND mention.clause=clause.id AND clause.sentence=sentence.id AND sentence.book=book.id AND book.id and book.year >=""" + str(1820) + """ AND book.year <""" + str(1840) + """ GROUP BY color.name, color.id, color.base"""
 
-c.execute(query)
+q = "select num_dep from sentence"
+
+c.execute(q)
+
+vals = []
+
 
 for row in c.fetchall():
-    print(row)
+    vals.append(int(row[0]))
+
+
+
+print(percentile(vals, 99))
+print(percentile(vals, 95))
+print(percentile(vals, 90))
+print(percentile(vals, 80))
+print(percentile(vals, 70))
+print(percentile(vals, 60))
+print(percentile(vals, 50))
+print(percentile(vals, 40))
+print(percentile(vals, 30))
+print(percentile(vals, 20))
+print(percentile(vals, 10))
