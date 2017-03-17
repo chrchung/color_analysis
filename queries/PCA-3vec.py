@@ -6,7 +6,6 @@ tls.set_credentials_file(username='ChristinaChung', api_key='9Qz7ub7MJHtBqdy6N6O
 import plotly.plotly as py
 import plotly.graph_objs as go
 
-
 def parse_color_list(f):
     res = []
     with open(f, 'r') as f:
@@ -74,6 +73,7 @@ f.write(json.dumps(ar))
 f.close()
 
 X = np.array(ar)
+
 pca = PCA(n_components=2)
 pca.fit(X)
 
