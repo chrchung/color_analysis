@@ -77,5 +77,16 @@ trace = go.Scatter(
     )
 
 data = [trace]
+
+trace = go.Scatter(
+    x =
+    y =
+    mode='text+lines'
+    text = col
+)
+
+
+
+
 py.iplot(data, filename='PCA')
 

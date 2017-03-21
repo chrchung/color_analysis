@@ -115,6 +115,6 @@ data = [
 
 
 
-py.iplot(data, filename='labelled-heatmap')
+py.iplot(data, filename='heat')
 
 

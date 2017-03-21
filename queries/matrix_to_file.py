@@ -33,7 +33,7 @@ data = [
 
 
 
-py.iplot(data, filename='labelled-heatmap')
+py.iplot(data, filename='timewarp')
 
 ##
 ##The Mayor of Casterbridge: the Life and Death of a Man of Character.
