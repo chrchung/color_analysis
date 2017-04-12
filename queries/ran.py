@@ -4,13 +4,16 @@ import json
 conn = sqlite3.connect('../color_analysis_merged.db')
 c = conn.cursor()
 
-query = """SELECT count(*) FROM color"""
 
-to = json.loads(open('../query_results/total_occurence_per_color.json', 'r').read())
+res = open('../query_results/col.txt', 'w')
 
-c.execute(query)
+with open('../query_results/colors.txt', 'r') as f:
+    for row in f:
+        row = row.strip('\n').split(':')
+        res.write("'" + row[1] + "'\n")
 
-print(c.fetchone())
+res.close()
+
 
 ##def parse_color_list():
 ##    res = []

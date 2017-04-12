@@ -24,8 +24,6 @@ def total_occurence_per_color():
 
     return res
 
-        
-        
 def parse_color_list():
     res = []
     with open('../query_results/thresholded.txt', 'r') as f:
@@ -46,8 +44,12 @@ def stringify_color_list(color_list):
     return res
 
 def number_of_sentences_in_corpus():
-    query = """SELECT count(*) FROM sentence"""
-
+    query = """SELECT count(*) FROM sentence, mention, clause, color
+WHERE mention.clause = clause.id AND
+clause.sentence = sentence.id AND mention.type != 'noun'
+AND mention.type != 'verb' AND mention.color = color.id AND
+color.name IN """ + sql_format
+    
     c.execute(query)
 
     return c.fetchone()[0]
@@ -56,12 +58,17 @@ def occurence_color_in_num_clauses(clause_dist):
     res = {}
 
     for length in clause_dist:        
-        query = """SELECT color.name, count(*) FROM color, mention, sentence, clause
-        WHERE mention.color=color.id AND mention.clause=clause.id
-        AND clause.sentence=sentence.id AND
-        sentence.num_dep >= """ + str(length[0]) + """ AND sentence.num_dep <= """ + str(length[1]) + """ GROUP BY color.name"""
-        
-        print(query)
+        start = str(length[0])
+        finish = str(length[1])
+
+        query = """SELECT color.name, count(*) FROM sentence, mention, clause, color
+WHERE mention.clause = clause.id AND
+clause.sentence = sentence.id AND mention.type != 'noun'
+AND mention.type != 'verb' AND mention.color = color.id AND
+color.name IN """ + sql_format + """ AND (sentence.num_dep >=""" +\
+start + ' AND sentence.num_dep < ' + finish + ') AND sentence.num_dep >= 0' +\
+' GROUP BY color.name'
+
         c.execute(query)
 
         res[length] = {}
@@ -76,8 +83,13 @@ def percent_occurence_sentences_of_num_clauses(clause_dist, num_sentences):
     res = {}
     
     for length in clause_dist:
-        query = """SELECT count(*) FROM sentence WHERE sentence.num_dep >= """ + str(length[0]) + """ AND sentence.num_dep <= """ + str(length[1])
-
+        query = """SELECT count(*) FROM sentence, mention, clause, color
+WHERE mention.clause = clause.id AND
+clause.sentence = sentence.id AND mention.type != 'noun'
+AND mention.type != 'verb' AND mention.color = color.id AND
+color.name IN """ + sql_format + """ AND (sentence.num_dep >=""" +\
+start + ' AND sentence.num_dep < ' + finish + ') AND sentence.num_dep >= 0'
+        
         c.execute(query)
 
         res[length] = c.fetchone()[0] / num_sentences
@@ -85,12 +97,19 @@ def percent_occurence_sentences_of_num_clauses(clause_dist, num_sentences):
     return res
        
 
-co = parse_color_list()
+col = parse_color_list()
+
+sql_format = '('
+for i in range(0, len(col) - 1):
+    sql_format += "'" + col[i] + "',"
+sql_format += "'" + col[len(col) - 1] + "'"
+sql_format += ')'
+
 ##string_list = stringify_color_list(color_list)
 to = total_occurence_per_color()
 
 # considering sentence lengths of 0-5, 6-15, etc. 
-clause_dist = [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 9), (10, 20), (21, 30), (31, 40), (41, 100)]
+clause_dist = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 10), (10, 21), (21, 31), (31, 41), (41, 100)]
 
 # number of sentences in corpus
 num_sentences = number_of_sentences_in_corpus()
@@ -101,20 +120,20 @@ pos = percent_occurence_sentences_of_num_clauses(clause_dist, num_sentences)
 oc = occurence_color_in_num_clauses(clause_dist)
 
 res = []
-for color in co:
+for color in col:
     stat = {'name': color, 'occur': to[color], 'expected': [], 'actual': [], 'ratio': [], 'p': [], 'percent':[]}
     
     for length in clause_dist:
         expected = to[color] * pos[length]
 
         actual = oc[length][color] if color in oc[length].keys() else 0
-        ratio = actual / expected if expected else 0
+        ratio = actual / expected if expected else float('inf')
         
         stat['expected'].append(expected)
         stat['actual'].append(actual)
         stat['ratio'].append(ratio)
         stat['percent'].append(actual / to[color])
-        stat['p'].append(abs(actual - expected) / expected)
+        stat['p'].append(abs(actual - expected) / expected if expected else float('inf'))
 
 
     res.append(stat)

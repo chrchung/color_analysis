@@ -33,13 +33,13 @@ for color in co:
         expected = to[color] * wc[length] / to_wc
 
         actual = mentions[length][color] if color in mentions[length].keys() else 0
-        ratio = actual / expected if expected else 0
+        ratio = actual / expected if expected else float('inf')
         
         stat['expected'].append(expected)
         stat['actual'].append(actual)
         stat['ratio'].append(ratio)
         stat['percent'].append(actual / to[color])
-        stat['p'].append(abs(actual - expected) / expected)
+        stat['p'].append(abs(actual - expected) / expected if expected else float('inf'))
 
 
     #print(str(sum(stat['actual'])) + ' ' + str(to[color]))

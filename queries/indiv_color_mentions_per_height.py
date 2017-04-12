@@ -11,7 +11,12 @@ def indiv_color_mentions_per_decade(period):
     start = period[0]
     finish = period[1]
     
-    query = """SELECT color.name, count(*) FROM mention, clause, sentence, book, color WHERE mention.color = color.id AND mention.clause = clause.id AND clause.sentence = sentence.id AND sentence.book = book.id AND (sentence.height >= """ +start + """ AND sentence.height < """ + finish + """) GROUP BY color.name"""
+    query = """SELECT color.name, count(*) FROM mention, clause,
+sentence, book, color WHERE mention.color = color.id AND mention.clause
+= clause.id AND mention.type != 'noun' AND mention.type != 'verb'
+AND clause.sentence = sentence.id AND sentence.book = book.id
+AND (sentence.height >= """ +start + """ AND sentence.height < """ \
+    + finish + """) GROUP BY color.name"""
     
     c.execute(query)
 
