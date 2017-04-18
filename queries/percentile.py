@@ -1,4 +1,5 @@
 import sqlite3
+import json
 conn = sqlite3.connect('../color_analysis_merged.db')
 c = conn.cursor()
 from numpy import percentile
@@ -24,9 +25,10 @@ sql_format += "'" + col[len(col) - 1] + "'"
     
 
 sql_format += ')'
-    
 
-query = """SELECT color.name, sentence.text, book.title, book.author, book.year FROM mention, clause, sentence, color, book
+res = []
+
+query = """SELECT DISTINCT sentence.id FROM mention, clause, sentence, color, book
 WHERE mention.color = color.id AND mention.clause = clause.id AND clause.sentence
 = sentence.id AND mention.type != 'verb' AND mention.type != 'noun' AND sentence.book = book.id
 AND color.name IN""" + sql_format
@@ -34,20 +36,15 @@ AND color.name IN""" + sql_format
                        
 c.execute(query)
 
+for item in c.fetchall():
+    res.append(str(item[0]))
 
-f = open('../query_results/all_sentences.txt', 'w')
 
-n = 0
-
-a = c.fetchone()
-
-while a:
-    #print(a)
-    n+=1
-    f.write(a[0] + ',' + a[1] + ',' + str(a[2].encode('utf-8')) + ',' + str(a[3].encode('utf-8')) + ',' + str(a[4]) + '\n')
-    a = c.fetchone()
-
+f = open('../query_results/clause_distribution.txt', 'w')
+f.write(','.join(res))
 f.close()
+
+
 ##print(percentile(res, 99))
 ##print(percentile(res, 95))
 ##print(percentile(res, 90))

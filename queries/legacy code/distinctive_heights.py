@@ -23,6 +23,7 @@ decades = ['0_6','6_8', '8_10', '10_13', '13_16', '16_19', '19_21', '21_28', '28
 
 
 to_wc = sum([int(wc[decade]) for decade in wc])
+print(to_wc)
 
 res = []
 for color in co:
@@ -33,13 +34,13 @@ for color in co:
         expected = to[color] * wc[length] / to_wc
 
         actual = mentions[length][color] if color in mentions[length].keys() else 0
-        ratio = actual / expected if expected else 0
+        ratio = actual / expected if expected else float('inf')
         
         stat['expected'].append(expected)
         stat['actual'].append(actual)
         stat['ratio'].append(ratio)
         stat['percent'].append(actual / to[color])
-        stat['p'].append(abs(actual - expected) / expected)
+        stat['p'].append(abs(actual - expected) / expected if expected else float('inf'))
 
 
     #print(str(sum(stat['actual'])) + ' ' + str(to[color]))
