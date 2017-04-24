@@ -35,4 +35,8 @@ js = json.loads(open('../query_results/sentence_length.json', 'r').read())
 cats = ['0_3', '4_6', '7_9', '10_12', '13_16', '16_20', '21_25', '26_33', '34_44', '45_57', '58_87', '88_150', '151_199', '200+']
 pipeline(name, js, cats)
 
+name = "pred_attr_noun_verb"
+js = json.loads(open('../query_results/distinctive_pred.json', 'r').read())
+cats = ['pred', 'attr', 'noun', 'verb']
+pipeline(name, js, cats)
 

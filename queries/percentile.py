@@ -28,7 +28,7 @@ sql_format += ')'
 
 res = []
 
-query = """SELECT DISTINCT sentence.id FROM mention, clause, sentence, color, book
+query = """SELECT DISTINCT sentence.id, count(*) FROM mention, clause, sentence, color, book
 WHERE mention.color = color.id AND mention.clause = clause.id AND clause.sentence
 = sentence.id AND mention.type != 'verb' AND mention.type != 'noun' AND sentence.book = book.id
 AND color.name IN""" + sql_format
